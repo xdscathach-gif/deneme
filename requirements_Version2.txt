@@ -1,0 +1,55 @@
+# GUI Framework
+tkinter-modernize>=1.0.0
+
+# Telegram API
+pyrogram>=2.0.106
+TgCrypto>=1.2.5
+
+# Veritabanı
+sqlite3
+
+# Güvenlik ve Kimlik Doğrulama
+PyJWT>=2.8.0
+cryptography>=41.0.0
+bcrypt>=4.0.1
+
+# HTTP İstekleri
+requests>=2.31.0
+httpx>=0.24.0
+
+# Async İşlemler
+asyncio
+aiofiles>=23.1.0
+
+# JSON ve Veri İşleme
+orjson>=3.9.0
+
+# Tarih ve Zaman
+python-dateutil>=2.8.2
+
+# Loglama
+loguru>=0.7.0
+
+# Sistem İşlemleri
+psutil>=5.9.5
+pathlib
+
+# Executable Oluşturma
+PyInstaller>=5.13.0
+auto-py-to-exe>=2.34.0
+
+# IP ve Ağ İşlemleri
+geoip2>=4.7.0
+requests-cache>=1.1.0
+
+# GUI Tema ve Animasyon
+Pillow>=10.0.0
+tkinter-tooltip>=2.1.0
+
+# Yapılandırma
+pydantic>=2.0.0
+python-dotenv>=1.0.0
+
+# Test (Opsiyonel)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

@@ -1,0 +1,132 @@
+2025-10-07 23:20:19,511 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:20:19,518 - config.database - INFO - Veritabaný þemasý 0'den 6'e yükseltiliyor
+2025-10-07 23:20:19,518 - config.database - INFO - Þema yükseltmesi tamamlandý
+2025-10-07 23:20:19,518 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:20:19,518 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:20:19,995 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-07 23:20:28,390 - gui.login_window - ERROR - Yönetici giriþ hatasý: 'sqlite3.Connection' object has no attribute 'lastrowid'
+2025-10-07 23:25:38,184 - gui.main_window - INFO - Uygulama kullanýcý tarafýndan sonlandýrýldý
+2025-10-07 23:25:41,935 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:25:41,937 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:25:41,937 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:25:42,287 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-07 23:25:58,878 - gui.login_window - ERROR - Yönetici giriþ hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:27:54,764 - gui.main_window - INFO - Uygulama kullanýcý tarafýndan sonlandýrýldý
+2025-10-07 23:27:57,889 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:27:57,891 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:27:57,891 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:27:58,240 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-07 23:28:13,781 - gui.login_window - ERROR - Yönetici giriþ hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:41:51,644 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:41:51,650 - config.database - INFO - Veritabaný þemasý 0'den 6'e yükseltiliyor
+2025-10-07 23:41:51,650 - config.database - INFO - Þema yükseltmesi tamamlandý
+2025-10-07 23:41:51,650 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:41:51,650 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:41:52,001 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-07 23:41:59,167 - gui.login_window - ERROR - Yönetici giriþ hatasý: 'list' object has no attribute 'lastrowid'
+2025-10-07 23:47:15,384 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:47:15,386 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:47:15,387 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:47:15,741 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-07 23:47:15,786 - gui.login_window - ERROR - Ýstatistik gösterme hatasý: unknown option "-text"
+2025-10-07 23:47:24,825 - gui.login_window - ERROR - Async iþlem hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:47:24,825 - gui.login_window - ERROR - Yönetici giriþ hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:49:00,010 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:49:00,013 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:49:00,013 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:49:00,416 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-07 23:49:07,585 - gui.login_window - ERROR - Yönetici giriþ hatasý: TokenAuthenticator.admin_login() takes from 2 to 3 positional arguments but 4 were given
+2025-10-07 23:50:40,471 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:50:40,472 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:50:40,473 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:50:40,835 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-07 23:50:55,208 - gui.login_window - ERROR - Async iþlem hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:50:55,209 - gui.login_window - ERROR - Yönetici giriþ hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:50:55,310 - gui.login_window - ERROR - Async iþlem hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:50:55,310 - gui.login_window - ERROR - Admin login retry hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:52:50,553 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:52:50,556 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:52:50,556 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:52:50,933 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-07 23:53:06,314 - gui.login_window - ERROR - Async iþlem hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:53:06,314 - gui.login_window - ERROR - Admin login deneme 1 hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:53:06,816 - gui.login_window - ERROR - Async iþlem hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:53:06,816 - gui.login_window - ERROR - Admin login deneme 2 hatasý: UNIQUE constraint failed: tokens.token_id
+2025-10-07 23:54:31,765 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:54:31,767 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:54:31,767 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:54:32,115 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-07 23:54:38,924 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:44,969 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:48,674 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:48,829 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:48,989 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:49,149 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:49,294 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:55,719 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:56,178 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:56,345 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:56,510 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:56,652 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:56,799 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:56,958 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:57,104 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:57,254 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:57,392 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:54:57,546 - core.auth - INFO - Süresi dolmuþ token'lar temizlendi
+2025-10-07 23:58:23,950 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-07 23:58:23,952 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-07 23:58:23,952 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-07 23:58:24,326 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-08 00:01:09,564 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-08 00:01:09,566 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-08 00:01:09,566 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-08 00:01:09,965 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-08 00:01:13,693 - gui.login_window - INFO - Admin giriþi baþlatýlýyor...
+2025-10-08 00:01:14,239 - gui.login_window - INFO - Admin þifre kontrolü: s...
+2025-10-08 00:01:14,239 - gui.login_window - INFO - Auth.admin_login çaðrýlýyor...
+2025-10-08 00:01:14,242 - gui.login_window - INFO - Auth.admin_login sonucu: AuthResult(success=False, user_id=None, username=None, token=None, error_message='Hatalý yönetici þifresi', is_admin=False)
+2025-10-08 00:01:14,242 - gui.login_window - INFO - Login result handling: AuthResult(success=False, user_id=None, username=None, token=None, error_message='Hatalý yönetici þifresi', is_admin=False), is_admin: True
+2025-10-08 00:01:14,243 - gui.login_window - WARNING - Giriþ baþarýsýz: Hatalý yönetici þifresi
+2025-10-08 00:01:20,685 - gui.login_window - INFO - Admin giriþi baþlatýlýyor...
+2025-10-08 00:01:22,745 - gui.login_window - INFO - Admin þifre kontrolü: urk...
+2025-10-08 00:01:22,746 - gui.login_window - INFO - Auth.admin_login çaðrýlýyor...
+2025-10-08 00:01:22,748 - gui.login_window - INFO - Auth.admin_login sonucu: AuthResult(success=True, user_id=1, username='admin', token='7Q64F24SGWaJ1dhnFx7anFv_o95zOu7OifA6-wzjdh4', error_message=None, is_admin=True)
+2025-10-08 00:01:22,754 - gui.login_window - INFO - Login result handling: AuthResult(success=True, user_id=1, username='admin', token='7Q64F24SGWaJ1dhnFx7anFv_o95zOu7OifA6-wzjdh4', error_message=None, is_admin=True), is_admin: True
+2025-10-08 00:01:22,755 - gui.login_window - INFO - Baþarýlý giriþ: {'user_id': 1, 'username': 'admin', 'token': '7Q64F24SGWaJ1dhnFx7anFv_o95zOu7OifA6-wzjdh4', 'is_admin': True}
+2025-10-08 00:01:38,909 - gui.login_window - INFO - Admin giriþi baþlatýlýyor...
+2025-10-08 00:01:39,776 - gui.login_window - INFO - Admin þifre kontrolü: urk...
+2025-10-08 00:01:39,776 - gui.login_window - INFO - Auth.admin_login çaðrýlýyor...
+2025-10-08 00:01:39,779 - gui.login_window - INFO - Auth.admin_login sonucu: AuthResult(success=True, user_id=1, username='admin', token='e9efjQZX8HAZBwW1c8XM6vGdFQ6qx3_ka_KMLk59UmU', error_message=None, is_admin=True)
+2025-10-08 00:01:39,783 - gui.login_window - INFO - Login result handling: AuthResult(success=True, user_id=1, username='admin', token='e9efjQZX8HAZBwW1c8XM6vGdFQ6qx3_ka_KMLk59UmU', error_message=None, is_admin=True), is_admin: True
+2025-10-08 00:01:39,784 - gui.login_window - INFO - Baþarýlý giriþ: {'user_id': 1, 'username': 'admin', 'token': 'e9efjQZX8HAZBwW1c8XM6vGdFQ6qx3_ka_KMLk59UmU', 'is_admin': True}
+2025-10-08 00:01:43,603 - gui.login_window - INFO - Admin giriþi baþlatýlýyor...
+2025-10-08 00:01:44,834 - gui.login_window - INFO - Admin þifre kontrolü: urk...
+2025-10-08 00:01:44,835 - gui.login_window - INFO - Auth.admin_login çaðrýlýyor...
+2025-10-08 00:01:44,837 - gui.login_window - INFO - Auth.admin_login sonucu: AuthResult(success=True, user_id=1, username='admin', token='UMgjs5LQNIRTWxLMx6QoDebxXHd3fz6_W2SAv-XokFY', error_message=None, is_admin=True)
+2025-10-08 00:01:44,842 - gui.login_window - INFO - Login result handling: AuthResult(success=True, user_id=1, username='admin', token='UMgjs5LQNIRTWxLMx6QoDebxXHd3fz6_W2SAv-XokFY', error_message=None, is_admin=True), is_admin: True
+2025-10-08 00:01:44,842 - gui.login_window - INFO - Baþarýlý giriþ: {'user_id': 1, 'username': 'admin', 'token': 'UMgjs5LQNIRTWxLMx6QoDebxXHd3fz6_W2SAv-XokFY', 'is_admin': True}
+2025-10-08 00:04:27,825 - __main__ - INFO - Userbot Manager baþlatýlýyor...
+2025-10-08 00:04:27,827 - config.database - INFO - Veritabaný baþarýyla baþlatýldý
+2025-10-08 00:04:27,827 - __main__ - INFO - Veritabaný baþlatýldý
+2025-10-08 00:04:28,198 - gui.login_window - INFO - LoginWindow baþlatýldý, callback: <bound method MainApplication.on_login_success of <gui.main_window.MainApplication object at 0x0000027AE8E2E510>>
+2025-10-08 00:04:28,199 - __main__ - INFO - Uygulama baþarýyla baþlatýldý
+2025-10-08 00:04:37,436 - gui.login_window - INFO - Admin giriþi baþlatýlýyor...
+2025-10-08 00:04:37,437 - gui.login_window - INFO - Admin þifre kontrolü: urk...
+2025-10-08 00:04:37,437 - gui.login_window - INFO - Auth.admin_login çaðrýlýyor...
+2025-10-08 00:04:37,440 - gui.login_window - INFO - Auth.admin_login sonucu: AuthResult(success=True, user_id=1, username='admin', token='qen86ZGcnxKP4Gbi4l1KZ8rSdXb29tqXZ-7kGf8wueI', error_message=None, is_admin=True)
+2025-10-08 00:04:37,440 - gui.login_window - INFO - Login result handling: AuthResult(success=True, user_id=1, username='admin', token='qen86ZGcnxKP4Gbi4l1KZ8rSdXb29tqXZ-7kGf8wueI', error_message=None, is_admin=True), is_admin: True
+2025-10-08 00:04:37,441 - gui.login_window - INFO - Baþarýlý giriþ: {'user_id': 1, 'username': 'admin', 'token': 'qen86ZGcnxKP4Gbi4l1KZ8rSdXb29tqXZ-7kGf8wueI', 'is_admin': True}
+2025-10-08 00:04:37,441 - gui.login_window - INFO - Success callback: <bound method MainApplication.on_login_success of <gui.main_window.MainApplication object at 0x0000027AE8E2E510>>
+2025-10-08 00:04:39,303 - gui.login_window - INFO - Success callback çaðrýlýyor...
+2025-10-08 00:04:39,411 - gui.login_window - INFO - Success callback baþarýyla çaðrýldý
+2025-10-08 00:07:59,123 - gui.login_window - INFO - LoginWindow baþlatýldý, callback: <bound method MainApplication.on_login_success of <gui.main_window.MainApplication object at 0x0000027AE8E2E510>>
+2025-10-08 00:08:05,981 - gui.login_window - INFO - Admin giriþi baþlatýlýyor...
+2025-10-08 00:08:05,982 - gui.login_window - INFO - Admin þifre kontrolü: urk...
+2025-10-08 00:08:05,983 - gui.login_window - INFO - Auth.admin_login çaðrýlýyor...
+2025-10-08 00:08:05,984 - gui.login_window - INFO - Auth.admin_login sonucu: AuthResult(success=True, user_id=1, username='admin', token='Wapw0VZWci8Ux3Hjnfw-d0rZ_4rq1-RVYgqw5n9PaPE', error_message=None, is_admin=True)
+2025-10-08 00:08:05,985 - gui.login_window - INFO - Login result handling: AuthResult(success=True, user_id=1, username='admin', token='Wapw0VZWci8Ux3Hjnfw-d0rZ_4rq1-RVYgqw5n9PaPE', error_message=None, is_admin=True), is_admin: True
+2025-10-08 00:08:05,985 - gui.login_window - INFO - Baþarýlý giriþ: {'user_id': 1, 'username': 'admin', 'token': 'Wapw0VZWci8Ux3Hjnfw-d0rZ_4rq1-RVYgqw5n9PaPE', 'is_admin': True}
+2025-10-08 00:08:05,985 - gui.login_window - INFO - Success callback: <bound method MainApplication.on_login_success of <gui.main_window.MainApplication object at 0x0000027AE8E2E510>>
+2025-10-08 00:08:07,325 - gui.login_window - INFO - Success callback çaðrýlýyor...
+2025-10-08 00:08:07,356 - gui.login_window - INFO - Success callback baþarýyla çaðrýldý
