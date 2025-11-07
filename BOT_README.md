@@ -59,8 +59,23 @@ pip install -r bot_requirements.txt
 ```
 
 3. **Configure the bot**:
-   - Open `test.py`
-   - Replace `YOUR_BOT_TOKEN_HERE` with your actual bot token from [@BotFather](https://t.me/BotFather)
+   - Get your bot token from [@BotFather](https://t.me/BotFather)
+   - Set the token as an environment variable:
+   
+   **On Linux/Mac:**
+   ```bash
+   export BOT_TOKEN='your-bot-token-here'
+   ```
+   
+   **On Windows:**
+   ```cmd
+   set BOT_TOKEN=your-bot-token-here
+   ```
+   
+   **Or create a `.env` file** (recommended):
+   ```
+   BOT_TOKEN=your-bot-token-here
+   ```
 
 4. **Run the bot**:
 ```bash

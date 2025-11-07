@@ -10,9 +10,10 @@ import logging
 import sqlite3
 import time
 import re
-from datetime import datetime, timedelta
-from functools import lru_cache, wraps
+import os
+from functools import wraps
 from threading import Lock
+from collections import OrderedDict
 from typing import Optional, Dict, Any, List, Tuple
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, User
 from telegram.ext import (
@@ -23,6 +24,7 @@ from telegram.ext import (
     ContextTypes,
     filters
 )
+from telegram import error as telegram_error
 
 # Logging configuration
 logging.basicConfig(
@@ -262,8 +264,29 @@ LANGUAGE_NAMES = {
     "hi": {"tr": "🇮🇳 Hintçe", "en": "🇮🇳 Hindi", "hi": "🇮🇳 हिंदी"}
 }
 
-# Cache for translations
-_translation_cache = {}
+# LRU Cache for translations with max size
+class LRUCache:
+    """Simple LRU cache implementation with maximum size."""
+    def __init__(self, max_size=1000):
+        self.cache = OrderedDict()
+        self.max_size = max_size
+    
+    def get(self, key):
+        if key in self.cache:
+            # Move to end (most recently used)
+            self.cache.move_to_end(key)
+            return self.cache[key]
+        return None
+    
+    def set(self, key, value):
+        if key in self.cache:
+            self.cache.move_to_end(key)
+        self.cache[key] = value
+        if len(self.cache) > self.max_size:
+            # Remove least recently used item
+            self.cache.popitem(last=False)
+
+_translation_cache = LRUCache(max_size=1000)
 
 def get_text(key: str, lang: str = "tr", **kwargs) -> str:
     """
@@ -279,8 +302,9 @@ def get_text(key: str, lang: str = "tr", **kwargs) -> str:
     """
     cache_key = f"{key}:{lang}:{str(kwargs)}"
     
-    if cache_key in _translation_cache:
-        return _translation_cache[cache_key]
+    cached_value = _translation_cache.get(cache_key)
+    if cached_value is not None:
+        return cached_value
     
     # Get translation or fallback to Turkish
     text = TRANSLATIONS.get(key, {}).get(lang)
@@ -291,7 +315,7 @@ def get_text(key: str, lang: str = "tr", **kwargs) -> str:
     # Format with parameters
     try:
         result = text.format(**kwargs)
-        _translation_cache[cache_key] = result
+        _translation_cache.set(cache_key, result)
         return result
     except KeyError as e:
         logger.error(f"Missing format parameter {e} for key '{key}'")
@@ -468,9 +492,16 @@ class DatabaseManager:
     
     def update_setting(self, chat_id: int, key: str, value: Any):
         """Update a setting and invalidate cache."""
+        # Whitelist of allowed setting keys to prevent SQL injection
+        allowed_keys = {'nsfw_detection', 'spam_protection', 'max_violations'}
+        
+        if key not in allowed_keys:
+            raise ValueError(f"Invalid setting key: {key}")
+        
         conn = self._get_connection()
         try:
             cursor = conn.cursor()
+            # Now safe to use f-string since key is validated
             cursor.execute(
                 f"UPDATE settings SET {key} = ?, updated_at = CURRENT_TIMESTAMP WHERE chat_id = ?",
                 (value, chat_id)
@@ -708,7 +739,8 @@ async def is_admin(update: Update, context: ContextTypes.DEFAULT_TYPE) -> bool:
     try:
         member = await context.bot.get_chat_member(chat_id, user_id)
         return member.status in ['creator', 'administrator']
-    except:
+    except telegram_error.TelegramError as e:
+        logger.warning(f"Failed to check admin status for user {user_id} in chat {chat_id}: {e}")
         return False
 
 
@@ -740,17 +772,28 @@ def group_only(func):
 # CONTENT MODERATION
 # ============================================================================
 
-def detect_nsfw(text: str) -> bool:
+# NSFW keywords configuration - can be extended or loaded from file
+NSFW_KEYWORDS = [
+    'nsfw', 'porn', 'xxx', 'sex', 'nude', 'naked',
+    # Add more keywords as needed
+    # In production, load from configuration file or database
+]
+
+def detect_nsfw(text: str, custom_keywords: List[str] = None) -> bool:
     """
     Simple NSFW content detection.
     In production, use a proper ML model or API.
+    
+    Args:
+        text: Text to check
+        custom_keywords: Optional custom keyword list (overrides default)
+    
+    Returns:
+        True if NSFW content detected
     """
-    nsfw_keywords = [
-        'nsfw', 'porn', 'xxx', 'sex', 'nude', 'naked',
-        # Add more keywords as needed
-    ]
+    keywords = custom_keywords if custom_keywords is not None else NSFW_KEYWORDS
     text_lower = text.lower()
-    return any(keyword in text_lower for keyword in nsfw_keywords)
+    return any(keyword in text_lower for keyword in keywords)
 
 
 def detect_spam(text: str, user_message_count: int = 0) -> bool:
@@ -823,14 +866,18 @@ async def language_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(message, reply_markup=reply_markup, parse_mode='Markdown')
 
 
-@admin_only
-@group_only
-async def settings_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Settings command handler with optimized UI rendering."""
-    chat_id = update.effective_chat.id
-    user_id = update.effective_user.id
-    lang = db.get_user_language(user_id, chat_id)
+def build_settings_menu(chat_id: int, lang: str) -> Tuple[str, InlineKeyboardMarkup]:
+    """
+    Build settings menu markup and message.
+    Extracted to avoid code duplication and recursive Update creation.
     
+    Args:
+        chat_id: Chat ID
+        lang: Language code
+    
+    Returns:
+        Tuple of (message_text, reply_markup)
+    """
     # Get settings from cache
     settings = db.get_settings(chat_id, use_cache=True)
     
@@ -872,6 +919,18 @@ async def settings_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     reply_markup = InlineKeyboardMarkup(keyboard)
     message = get_text("settings_menu", lang)
     
+    return message, reply_markup
+
+
+@admin_only
+@group_only
+async def settings_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Settings command handler with optimized UI rendering."""
+    chat_id = update.effective_chat.id
+    user_id = update.effective_user.id
+    lang = db.get_user_language(user_id, chat_id)
+    
+    message, reply_markup = build_settings_menu(chat_id, lang)
     await update.message.reply_text(message, reply_markup=reply_markup, parse_mode='Markdown')
 
 
@@ -885,28 +944,37 @@ async def whitelist_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     # Get target user from reply or command args
     target_user = None
+    target_user_id = None
+    
     if update.message.reply_to_message:
         target_user = update.message.reply_to_message.from_user
+        target_user_id = target_user.id
     elif context.args:
-        # Try to parse user ID or username
+        # Try to parse user ID
         try:
             target_user_id = int(context.args[0])
-            # In real bot, fetch user info
-            target_user = User(id=target_user_id, is_bot=False, first_name="User")
+            # Try to get user info from chat
+            try:
+                member = await context.bot.get_chat_member(chat_id, target_user_id)
+                target_user = member.user
+            except telegram_error.TelegramError:
+                # User info not available, use ID only
+                logger.warning(f"Could not fetch user info for ID {target_user_id}")
         except ValueError:
             await update.message.reply_text(get_text("error_user_not_found", lang))
             return
     
-    if not target_user:
+    if not target_user_id:
         await update.message.reply_text(get_text("error_user_not_found", lang))
         return
     
-    db.add_to_whitelist(chat_id, target_user.id, target_user.username or target_user.first_name)
+    username = target_user.username if target_user else str(target_user_id)
+    db.add_to_whitelist(chat_id, target_user_id, username)
     
-    mention = get_user_mention(target_user)
+    mention = get_user_mention(target_user) if target_user else f"User {target_user_id}"
     message = get_text("user_whitelisted", lang, mention=mention)
     await update.message.reply_text(message, parse_mode='Markdown')
-    logger.info(f"User {target_user.id} added to whitelist in chat {chat_id}")
+    logger.info(f"User {target_user_id} added to whitelist in chat {chat_id}")
 
 
 @admin_only
@@ -919,27 +987,36 @@ async def blacklist_command(update: Update, context: ContextTypes.DEFAULT_TYPE):
     
     # Get target user from reply or command args
     target_user = None
+    target_user_id = None
+    
     if update.message.reply_to_message:
         target_user = update.message.reply_to_message.from_user
+        target_user_id = target_user.id
     elif context.args:
         try:
             target_user_id = int(context.args[0])
-            target_user = User(id=target_user_id, is_bot=False, first_name="User")
+            # Try to get user info from chat
+            try:
+                member = await context.bot.get_chat_member(chat_id, target_user_id)
+                target_user = member.user
+            except telegram_error.TelegramError:
+                logger.warning(f"Could not fetch user info for ID {target_user_id}")
         except ValueError:
             await update.message.reply_text(get_text("error_user_not_found", lang))
             return
     
-    if not target_user:
+    if not target_user_id:
         await update.message.reply_text(get_text("error_user_not_found", lang))
         return
     
     reason = " ".join(context.args[1:]) if len(context.args) > 1 else ""
-    db.add_to_blacklist(chat_id, target_user.id, target_user.username or target_user.first_name, reason)
+    username = target_user.username if target_user else str(target_user_id)
+    db.add_to_blacklist(chat_id, target_user_id, username, reason)
     
-    mention = get_user_mention(target_user)
+    mention = get_user_mention(target_user) if target_user else f"User {target_user_id}"
     message = get_text("user_blacklisted", lang, mention=mention)
     await update.message.reply_text(message, parse_mode='Markdown')
-    logger.info(f"User {target_user.id} added to blacklist in chat {chat_id}")
+    logger.info(f"User {target_user_id} added to blacklist in chat {chat_id}")
 
 
 @admin_only
@@ -952,17 +1029,24 @@ async def violations_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     
     # Get target user
     target_user = None
+    target_user_id = None
+    
     if update.message.reply_to_message:
         target_user = update.message.reply_to_message.from_user
+        target_user_id = target_user.id
     elif context.args:
         try:
             target_user_id = int(context.args[0])
-            target_user = User(id=target_user_id, is_bot=False, first_name="User")
+            try:
+                member = await context.bot.get_chat_member(chat_id, target_user_id)
+                target_user = member.user
+            except telegram_error.TelegramError:
+                logger.warning(f"Could not fetch user info for ID {target_user_id}")
         except ValueError:
             await update.message.reply_text(get_text("error_user_not_found", lang))
             return
     
-    if not target_user:
+    if not target_user_id:
         # Show all violations
         items, total_pages = db.get_paginated_list(chat_id, 'violations', page=1)
         if not items:
@@ -974,8 +1058,8 @@ async def violations_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
         await update.message.reply_text(message, parse_mode='Markdown')
     else:
         # Show violations for specific user
-        count = db.get_violation_count(chat_id, target_user.id)
-        mention = get_user_mention(target_user)
+        count = db.get_violation_count(chat_id, target_user_id)
+        mention = get_user_mention(target_user) if target_user else f"User {target_user_id}"
         await update.message.reply_text(
             f"{mention}: {count} violations",
             parse_mode='Markdown'
@@ -992,22 +1076,29 @@ async def clear_violations_command(update: Update, context: ContextTypes.DEFAULT
     
     # Get target user
     target_user = None
+    target_user_id = None
+    
     if update.message.reply_to_message:
         target_user = update.message.reply_to_message.from_user
+        target_user_id = target_user.id
     elif context.args:
         try:
             target_user_id = int(context.args[0])
-            target_user = User(id=target_user_id, is_bot=False, first_name="User")
+            try:
+                member = await context.bot.get_chat_member(chat_id, target_user_id)
+                target_user = member.user
+            except telegram_error.TelegramError:
+                logger.warning(f"Could not fetch user info for ID {target_user_id}")
         except ValueError:
             await update.message.reply_text(get_text("error_user_not_found", lang))
             return
     
-    if not target_user:
+    if not target_user_id:
         await update.message.reply_text(get_text("error_user_not_found", lang))
         return
     
-    db.clear_violations(chat_id, target_user.id)
-    mention = get_user_mention(target_user)
+    db.clear_violations(chat_id, target_user_id)
+    mention = get_user_mention(target_user) if target_user else f"User {target_user_id}"
     message = get_text("violations_cleared", lang, mention=mention)
     await update.message.reply_text(message, parse_mode='Markdown')
     logger.info(f"Violations cleared for user {target_user.id} in chat {chat_id}")
@@ -1063,43 +1154,8 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     
     elif data == "back_settings":
-        # Return to settings menu (reuse settings rendering logic)
-        settings = db.get_settings(chat_id, use_cache=True)
-        
-        whitelist_count = db.get_list_count(chat_id, 'whitelist')
-        blacklist_count = db.get_list_count(chat_id, 'blacklist')
-        violations_count = db.get_list_count(chat_id, 'violations')
-        
-        nsfw_status = get_text("status_on" if settings['nsfw_detection'] else "status_off", lang)
-        spam_status = get_text("status_on" if settings['spam_protection'] else "status_off", lang)
-        
-        keyboard = [
-            [InlineKeyboardButton(
-                get_text("btn_nsfw_detection", lang, status=nsfw_status),
-                callback_data="toggle_nsfw"
-            )],
-            [InlineKeyboardButton(
-                get_text("btn_spam_protection", lang, status=spam_status),
-                callback_data="toggle_spam"
-            )],
-            [InlineKeyboardButton(
-                get_text("btn_whitelist", lang, count=whitelist_count),
-                callback_data="view_whitelist_1"
-            )],
-            [InlineKeyboardButton(
-                get_text("btn_blacklist", lang, count=blacklist_count),
-                callback_data="view_blacklist_1"
-            )],
-            [InlineKeyboardButton(
-                get_text("btn_violations", lang, count=violations_count),
-                callback_data="view_violations_1"
-            )],
-            [InlineKeyboardButton(get_text("btn_language", lang), callback_data="language")],
-            [InlineKeyboardButton(get_text("btn_close", lang), callback_data="close")]
-        ]
-        
-        reply_markup = InlineKeyboardMarkup(keyboard)
-        message = get_text("settings_menu", lang)
+        # Return to settings menu (use helper function)
+        message, reply_markup = build_settings_menu(chat_id, lang)
         await query.edit_message_text(message, reply_markup=reply_markup, parse_mode='Markdown')
         return
     
@@ -1109,8 +1165,9 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         new_value = 0 if settings['nsfw_detection'] else 1
         db.update_setting(chat_id, 'nsfw_detection', new_value)
         
-        # Refresh settings menu
-        await button_callback(Update(update_id=0, callback_query=query), context)
+        # Refresh settings menu using helper function
+        message, reply_markup = build_settings_menu(chat_id, lang)
+        await query.edit_message_text(message, reply_markup=reply_markup, parse_mode='Markdown')
         return
     
     elif data == "toggle_spam":
@@ -1119,8 +1176,9 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         new_value = 0 if settings['spam_protection'] else 1
         db.update_setting(chat_id, 'spam_protection', new_value)
         
-        # Refresh settings menu
-        await button_callback(Update(update_id=0, callback_query=query), context)
+        # Refresh settings menu using helper function
+        message, reply_markup = build_settings_menu(chat_id, lang)
+        await query.edit_message_text(message, reply_markup=reply_markup, parse_mode='Markdown')
         return
     
     elif data.startswith("view_whitelist_") or data.startswith("view_blacklist_") or data.startswith("view_violations_"):
@@ -1270,8 +1328,8 @@ async def error_handler(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await update.message.reply_text(error_msg)
             elif update.callback_query:
                 await update.callback_query.message.reply_text(error_msg)
-        except:
-            pass
+        except telegram_error.TelegramError as e:
+            logger.error(f"Failed to send error message: {e}")
 
 
 # ============================================================================
@@ -1288,8 +1346,13 @@ def main():
     # Initialize database
     db = DatabaseManager()
     
-    # Bot token (replace with your actual token or use environment variable)
-    TOKEN = "YOUR_BOT_TOKEN_HERE"
+    # Bot token from environment variable
+    TOKEN = os.getenv('BOT_TOKEN', 'YOUR_BOT_TOKEN_HERE')
+    
+    if TOKEN == 'YOUR_BOT_TOKEN_HERE':
+        logger.error("Bot token not set! Please set BOT_TOKEN environment variable.")
+        logger.error("Example: export BOT_TOKEN='your-bot-token-here'")
+        return
     
     # Create application
     application = Application.builder().token(TOKEN).build()
